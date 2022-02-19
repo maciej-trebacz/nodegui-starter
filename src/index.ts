@@ -1,43 +1,56 @@
-import { QMainWindow, QWidget, QLabel, FlexLayout, QPushButton, QIcon } from '@nodegui/nodegui';
-import logo from '../assets/logox200.png';
+import { QMainWindow, QWidget, QLabel, FlexLayout, QPushButton, QSlider, Orientation } from '@nodegui/nodegui';
 
 const win = new QMainWindow();
-win.setWindowTitle("Hello World");
+win.setWindowTitle("NodeGUI QSlider bug demo");
 
 const centralWidget = new QWidget();
-centralWidget.setObjectName("myroot");
+centralWidget.setObjectName("root");
 const rootLayout = new FlexLayout();
 centralWidget.setLayout(rootLayout);
 
 const label = new QLabel();
-label.setObjectName("mylabel");
-label.setText("Hello");
+label.setObjectName("label");
+label.setText("Steps to reproduce:\n1. Click the 'Set random slider value' button a few times\n2. Drag the slider knob using a mouse to a different position\n3. Click the button again. The slider will not be updated anymore.");
+
+const slider = new QSlider();
+slider.setObjectName("slider");
+slider.setTracking(true);
+slider.setValue(50);
+slider.setOrientation(Orientation.Horizontal);
 
 const button = new QPushButton();
-button.setIcon(new QIcon(logo));
-
-const label2 = new QLabel();
-label2.setText("World");
-label2.setInlineStyle(`
-  color: red;
-`);
+button.setObjectName("button");
+button.setText("Set random slider value");
+button.addEventListener("clicked", () => {
+  const randomValue = Math.floor(Math.random() * 100);
+  slider.setValue(randomValue);
+})
 
 rootLayout.addWidget(label);
+rootLayout.addWidget(slider);
 rootLayout.addWidget(button);
-rootLayout.addWidget(label2);
 win.setCentralWidget(centralWidget);
 win.setStyleSheet(
   `
-    #myroot {
-      background-color: #009688;
+    #root {
+      background-color: #fff;
       height: '100%';
-      align-items: 'center';
-      justify-content: 'center';
+      padding: 10px;
     }
-    #mylabel {
+    #label {
       font-size: 16px;
       font-weight: bold;
       padding: 1;
+      color: #000;
+    }
+    #slider {
+      margin: 8px 0;
+    }
+    #button {
+      font-size: 16px;
+      background: #eee;
+      color: #000;
+      margin: 1px;
     }
   `
 );
